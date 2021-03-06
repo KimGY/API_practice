@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>API 연습</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1>인터파크 API 이용 책검색</h1>
+    <pq>책제목 : </pq>
+    <br></br>
+    <pq2>책저자 : </pq2>
+    <br></br>
+    <pq3>책내용 : </pq3>
+    <br></br>
+    <pq4>이미지 : </pq4>
+    <br></br>
+    <input id="bookName" value="" type="text">
+    <button id="search">검색</button><p></p>
+    <script>
+        $(document).ready(function () {
+            $("#search").click(function () {
+                $.ajax({
+                    method: "get",
+                    dataType: "jsonp",
+                    jsonp: "callback",
+                    url: "http://book.interpark.com/api/search.api",
+                    data: {
+                        queryType: "all",
+                        sort: "salesPoint",
+                        query: $("#bookName").val(),
+                        key: "77231779E34F58A61D69F23C0E80FDCF9D21EECA3D8B9B5CF4DC58241D691A23",
+                        output: "json",
+                        callback: "abc"
+                    },
+
+                    success: function abc(msg) {
+                        console.log(msg);
+                        var title = msg.item[0].title;
+                        var tum = msg.item[0].coverLargeUrl;
+                        var contents = msg.item[0].description;
+                        var author = msg.item[0].author;
+
+                        $("#title").append("<strong>" + title + "</strong>");
+                        $("#content").append(contents);
+                        var img = ("<img src='" + tum + "'/>");
+                        $("#book_img").append(img);
+                        $("pq").append("<strong>" + title + "</strong>");
+                        $("pq2").append("<strong>" + author + "</strong>");
+                        $("pq3").append("<strong>" + contents + "</strong>");
+                        $("pq4").append("<img src='" + tum + "'/>");
+                        
+                    }
+                })
+
+            });
+        });
+    </script>
+</body>
+</html>
